@@ -1,0 +1,13 @@
+Data for the extra notebooks
+============================
+
+Nothing heavy is committed in this folder. Two cases:
+
+1. The notebook downloads its own data.
+   Nothing to do here. nilearn, mne and openneuro-py cache what they fetch
+   outside the repository, which is exactly what those notebooks demonstrate.
+
+2. The notebook needs a file that no library can fetch.
+   Then the file stays on the Teams shared folder and a short note goes here,
+   one per dataset, saying what it is, which notebook uses it, and where to
+   find it.

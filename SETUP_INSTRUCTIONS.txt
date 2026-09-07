@@ -11,53 +11,101 @@ The TAs will walk through these steps with you in the Week 1 practical.
 If you have never installed Python before, read top to bottom and run
 the commands exactly as written.
 
+The same instructions exist as an illustrated guide with screenshots,
+QMN_setup_guide_students.pdf, downloaded from Moodle next to this file. It
+covers the same ground: installing conda, installing VS Code, putting the
+course folder together, building the environment and checking that it works.
+Follow whichever of the two you prefer.
+
 
 --------------------------------------------------------------------------------
   1.  INSTALL CONDA  (skip if you already have Anaconda or Miniconda)
 --------------------------------------------------------------------------------
 
-We recommend Miniforge (minimal conda + open conda-forge channel, no
-Anaconda account required). Download the installer for your OS and run
-it with the default options:
+We recommend Miniconda, the minimal conda installer: it gives you conda
+and a Python, and nothing else. Download the installer for your OS and
+run it with the options it recommends:
 
-    https://conda-forge.org/download/
+    https://www.anaconda.com/docs/getting-started/miniconda/install
 
-On Windows, accept "Add Miniforge to my PATH" if asked. Then open a new
-terminal (on Windows: the "Miniforge Prompt", or any shell with conda on
-PATH) and verify:
+On Windows, leave the PATH option as the installer sets it: you will work
+from the Anaconda Prompt, which finds conda on its own. Open a terminal
+(on Windows the "Anaconda Prompt (miniconda3)", from the Start menu) and
+verify:
 
     conda --version
 
 You should see something like "conda 24.9.0". If you get "command not
 found", close the terminal, reopen it, and try again.
 
-Also recommended: install VS Code (https://code.visualstudio.com) plus
-its official "Python" and "Jupyter" extensions.
+Also install VS Code (https://code.visualstudio.com) and, from its
+Extensions panel, these official Microsoft extensions:
+
+    Python      (installs Pylance and the Python Debugger with it)
+    Jupyter     (runs notebooks inside VS Code)
 
 
 --------------------------------------------------------------------------------
   2.  GET THE COURSE MATERIAL
 --------------------------------------------------------------------------------
 
-Download (or git-clone) the course folder shared on Moodle and place it
-somewhere convenient on your computer, e.g.:
+If you received everything as a single zip file rather than as separate
+downloads, this section is already done for you: unzip it and go to section 3.
 
-    Windows  ->  C:\Users\<your-name>\Documents\QMN_course
-    macOS    ->  /Users/<your-name>/Documents/QMN_course
-    Linux    ->  /home/<your-name>/Documents/QMN_course
+The material is on Moodle as several separate files, so that a corrected
+notebook can be replaced without you downloading everything again. You put
+them together once, into a single folder, and that folder is where you work
+for the rest of the semester.
 
-Open a terminal and "cd" into that folder:
+  a) Download QMN_support_files.zip and unzip it somewhere convenient:
 
-    Windows (PowerShell):   cd $HOME\Documents\QMN_course
-    macOS / Linux:          cd ~/Documents/QMN_course
+         Windows        ->  %USERPROFILE%\QMN_practicals
+         macOS / Linux  ->  ~/QMN_practicals
+
+     %USERPROFILE% and ~ both mean your own user folder, so you never have
+     to type your user name. Somewhere else works too, as long as you use
+     your own path below. Unzipping makes a folder called QMN_practicals
+     holding data/, assets/ and src/.
+
+  b) Download environment.yml and put it in that same folder.
+
+  c) Download each notebook and put it in that same folder as well, beside
+     data/. Do the same for every notebook posted later in the semester.
+
+When you are done it looks like this:
+
+    QMN_practicals/
+        data/                                 from the zip
+        assets/                               from the zip
+        src/                                  from the zip
+        environment.yml
+        01_programming_fundamentals.ipynb     one Moodle item each
+        02_math_refresher.ipynb
+        03_probability_descriptive.ipynb
+        04_inference_ttests_power.ipynb
+
+THIS IS THE PART THAT GOES WRONG. A notebook left in your Downloads folder
+cannot find the data, and its first cell fails with an error about a missing
+file. The notebooks look for data/ in the folder they are sitting in, so
+they have to sit next to it.
+
+The other Moodle items do not go in the folder. This guide and its illustrated
+twin are the install instructions, and the four cheat sheets, one per week, are
+a page of syntax each to keep open beside you while you work. Nothing reads
+them, so keep them wherever suits you.
+
+Now open a terminal and "cd" into the folder:
+
+    Anaconda Prompt:        cd %USERPROFILE%\QMN_practicals
+    macOS / Linux:          cd ~/QMN_practicals
 
 Run "dir" (Windows) or "ls" (macOS / Linux) and check that you see at
 least:
 
     environment.yml
-    README.md
-    SETUP_INSTRUCTIONS.txt
-    notebooks/
+    data
+    src
+    01_programming_fundamentals.ipynb
 
 
 --------------------------------------------------------------------------------
@@ -68,6 +116,12 @@ From the project root (the folder that contains environment.yml), run:
 
     conda env create -f environment.yml
 
+IF CONDA ASKS YOU TO ACCEPT TERMS OF SERVICE, and it may, it stops and prints
+a command beginning with "conda tos accept". Copy the whole line it gives you,
+run it, then run the create command again. That is Anaconda asking you to
+agree to their terms rather than anything being broken, and it happens once
+per machine.
+
 This installs Python and all required libraries; it takes 5-15 minutes
 depending on your connection. Grab a coffee. Then activate it:
 
@@ -76,9 +130,17 @@ depending on your connection. Grab a coffee. Then activate it:
 You should now see "(qmn)" at the start of your terminal prompt. Every
 Python / pip / jupyter command from this point on uses the qmn environment.
 
-Register qmn as a Jupyter kernel so VS Code (and JupyterLab) can find it:
+If conda says that qmn already exists, you have set it up before. Do not
+remove it: update the one you have instead.
 
-    python -m ipykernel install --user --name qmn --display-name "Python (qmn)"
+    conda env update -n qmn -f environment.yml --prune
+
+Nothing needs to be registered: the Jupyter extension in VS Code finds conda
+environments by itself, since ipykernel is part of the environment. Only if
+qmn never shows up in the kernel list, or if you start JupyterLab from
+outside the environment, run this once with qmn active:
+
+    python -m ipykernel install --user --name qmn
 
 
 --------------------------------------------------------------------------------
@@ -89,17 +151,32 @@ In VS Code (recommended):
 
     code .
 
-Open notebooks/02_math_refresher.ipynb, click "Select Kernel" (top-right)
-and choose "Python (qmn)". Run the first two code cells (Shift+Enter):
-if they print package versions and the first rows of the dataset, your
-setup works.
+The fastest check, with the qmn environment active. From the QMN_practicals
+folder:
 
-Alternative - JupyterLab:
+    python src/check_env.py
 
-    jupyter lab
+It prints one line per package with the version you actually have, one line
+per dataset, and tells you what to do if something is missing.
 
-then open the notebook from the file tree and pick "Python (qmn)" from
-the Kernel menu.
+The same check from inside any notebook, which also verifies that the kernel
+you selected is the right one:
+
+    from src.check_env import check_environment
+    check_environment()
+
+Then open the first notebook of the course, 01_programming_fundamentals.ipynb,
+and click "Select Kernel" at its top right. Choose "Python Environments" from
+the panel that drops down, then pick qmn from the list.
+
+The list names environments by their path rather than by name, and the Python
+version does not tell them apart, so look for the entry whose path ends in
+"envs/qmn". You will know it worked because the button at the top right stops
+saying "Select Kernel" and shows the environment instead.
+
+Then run the first two code cells (Shift+Enter): if they print package
+versions and the first rows of the dataset, your setup works. The illustrated
+guide has screenshots of all three moments.
 
 
 --------------------------------------------------------------------------------
@@ -108,9 +185,9 @@ the Kernel menu.
 
 Every time you come back to work on the course:
 
-    cd ~/Documents/QMN_course      # or wherever you put it
+    cd ~/QMN_practicals      (Windows: cd %USERPROFILE%\QMN_practicals)
     conda activate qmn
-    code .                         # or:  jupyter lab
+    code .
 
 You do NOT need to repeat step 3 - the environment is already there.
 
@@ -133,23 +210,15 @@ You do NOT need to repeat step 3 - the environment is already there.
 
 
 --------------------------------------------------------------------------------
-  7.  CONTRIBUTING  (TAs / collaborators only - students can skip)
+  7.  GETTING HELP
 --------------------------------------------------------------------------------
 
-If you plan to commit changes to this repository, also activate the
-nbstripout filter once per clone, from the project root:
-
-    nbstripout --install --attributes .gitattributes
-
-This automatically scrubs cell outputs from .ipynb files at commit time
-so git diffs stay small and readable.
-
-
---------------------------------------------------------------------------------
-  8.  GETTING HELP
---------------------------------------------------------------------------------
-
-  * Course Teams channel  - quick questions, screenshots welcome.
+  * An AI assistant       - upload the PDF guide, paste the exact error and
+                            say which step you were on. Try one suggestion at
+                            a time.
+  * Email                 - giulio.matteucci@unige.ch, sami.el-boustani@unige.ch.
+                            Say which system you are on, the step you reached,
+                            and attach a screenshot of the error.
   * Moodle forum          - longer questions and conceptual discussions.
   * Weekly practical      - bring your laptop and ask the TAs in person.
 

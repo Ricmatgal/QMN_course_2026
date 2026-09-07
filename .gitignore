@@ -19,21 +19,39 @@ env/
 Thumbs.db
 *.swp
 
-# Data-prep working directory: only the exploration notebooks and the IBL build
-# script are tracked. Reference material, the EEG build scripts and the
-# regenerable download caches stay out of the repository.
-data_prep/*
-!data_prep/build_ibl_dataset.py
-!data_prep/explore_ibl.ipynb
-!data_prep/explore_eeg.ipynb
-!data_prep/explore_n170.ipynb
+# Data-prep working directory: entirely local. The build scripts need API
+# credentials and warm caches, nobody but their author runs them, and the
+# provenance of each dataset is written up in its data dictionary instead. The
+# exploration notebooks that tour the datasets live in notebooks/data/.
+data_prep/
 
 # Figures written by the notebooks themselves when they are run (the plotting
 # section saves one on purpose). The images we ship live in notebooks/assets/.
 notebooks/*.png
-notebooks/drafts/*.png
 
 # Raw EEG source files (~100 MB of .mat downloaded from Zenodo). The packaged
 # notebooks/data/alphawaves.npz is what the course uses; re-download the raw
 # release only if the package has to be rebuilt.
 eeg_datasets/
+
+# Animations rendered by 13_winding_intuition_demo.ipynb when it runs. The
+# notebook embeds them in its own output, so the files themselves would only
+# show up as changed every time somebody runs the cells.
+notebooks/assets/13_winding/
+
+# Files the Week 1 notebook writes when a student runs it
+notebooks/session_notes.txt
+notebooks/summary.txt
+notebooks/lab_report.txt
+
+# intermediate HTML for the cheat sheets, only the PDFs are kept
+cheatsheets/_*.html
+
+# The student package, built by tools/build_student_package.py. It is 25 MB and it is
+# rebuilt from the repository in one command, so it is not worth versioning.
+QMN_practicals_1to4/
+QMN_practicals_1to4.zip
+
+# The build scripts: stripping solutions, the cheat sheets, the student package.
+# Internal to the teaching team, kept out of the repository the students can see.
+tools/
